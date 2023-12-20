@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="hunter_ros2_control_udrf" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="prefix" default="robot_" />
+  <xacro:arg name="mode" default="simulation" />
+  <xacro:arg name="base_name" default="base" />
+
+
+  <xacro:include filename="$(find hunter_description)/ros2_control/hunter.ros2_control.xacro" />
+
+  <xacro:hunter_ros2_control
+    mode="$(arg mode)"
+    prefix="$(arg prefix)"
+    base_name="$(arg base_name)" />
+
+</robot>

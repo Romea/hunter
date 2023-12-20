@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<robot name="hunter_ros2_control" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="hunter_ros2_control" params="mode prefix base_name">
+
+
+    <xacro:include filename="$(find romea_mobile_base_description)/ros2_control/base1FAS2RWD.ros2_control.xacro" />
+
+    <xacro:property name="conf" value="$(find hunter_description)/config/hunter.yaml" />
+    <xacro:property name="props" value="${load_yaml(conf)}" />
+
+
+    <!-- Joint names -->
+    <xacro:property name="base_footprint_joint"
+      value="${props['joints']['base_footprint_joint_name']}" />
+    <xacro:property name="inertial_joint" value="${props['joints']['inertial_joint_name']}" />
+    <xacro:property name="front_axle_steering_joint"
+      value="${props['joints']['front_axle_steering_joint_name']}" />
+    <xacro:property name="front_left_wheel_steering_joint"
+      value="${props['joints']['front_left_wheel_steering_joint_name']}" />
+    <xacro:property name="front_right_wheel_steering_joint"
+      value="${props['joints']['front_right_wheel_steering_joint_name']}" />
+    <xacro:property name="front_left_wheel_spinning_joint"
+      value="${props['joints']['front_left_wheel_spinning_joint_name']}" />
+    <xacro:property name="front_right_wheel_spinning_joint"
+      value="${props['joints']['front_right_wheel_spinning_joint_name']}" />
+    <xacro:property name="rear_left_wheel_spinning_joint"
+      value="${props['joints']['rear_left_wheel_spinning_joint_name']}" />
+    <xacro:property name="rear_right_wheel_spinning_joint"
+      value="${props['joints']['rear_right_wheel_spinning_joint_name']}" />
+          
+    <!-- Geometry -->
+    <xacro:property name="wheelbase"
+      value="${props['geometry']['axles_distance']}" />
+    <xacro:property name="front_track"
+      value="${props['geometry']['front_axle']['wheels_distance']}" />
+    <xacro:property name="rear_track"
+      value="${props['geometry']['rear_axle']['wheels_distance']}" />
+    <xacro:property name="front_wheel_radius"
+      value="${props['geometry']['front_axle']['wheels']['radius']}" />
+    <xacro:property name="rear_wheel_radius"
+      value="${props['geometry']['rear_axle']['wheels']['radius']}" />
+    <xacro:property name="front_hub_carrier_offset"
+      value="${props['geometry']['front_axle']['wheels']['hub_carrier_offset']}" />
+    <xacro:property name="rear_hub_carrier_offset"
+      value="${props['geometry']['rear_axle']['wheels']['hub_carrier_offset']}" />
+    <xacro:property name="maximal_axle_steering_angle"
+      value="${props['front_axle_steering_control']['command']['maximal_angle']}" />
+    <xacro:property name="maximal_wheel_speed"
+      value="${props['rear_wheels_speed_control']['command']['maximal_speed']}" />
+
+    <!-- hardware plugins -->
+    <xacro:property name="simulation_hardware_plugin"
+      value="romea_mobile_base_gazebo/GazeboSystemInterface1FAS2RWD" />
+    <xacro:property name="live_hardware_plugin" 
+      value="hunter_hardware/Robot1FAS2RWDHardware" />
+
+
+    <xacro:base_control mode="${mode}" base_name="${base_name}" />
+
+  </xacro:macro>
+
+</robot>

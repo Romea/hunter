@@ -1,0 +1,9 @@
+<library path="hunter_hardware">
+  <class name="hunter_hardware/HunterHardware"
+         type="romea::ros2::HunterHardware"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Hardware interface for hunter robot
+    </description>
+  </class>
+</library>
