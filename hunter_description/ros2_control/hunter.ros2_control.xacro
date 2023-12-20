@@ -53,7 +53,7 @@
     <xacro:property name="simulation_hardware_plugin"
       value="romea_mobile_base_gazebo/GazeboSystemInterface1FAS2RWD" />
     <xacro:property name="live_hardware_plugin" 
-      value="hunter_hardware/Robot1FAS2RWDHardware" />
+      value="hunter_hardware/HunterHardware" />
 
 
     <xacro:base_control mode="${mode}" base_name="${base_name}" />
