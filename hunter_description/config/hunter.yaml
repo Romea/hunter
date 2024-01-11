@@ -1,43 +1,43 @@
 # kinematic: two_wheel_steering
 type: 1FAS2RWD
 geometry:
-  axles_distance: 0.650              # To be configured
+  axles_distance: 0.650
   front_axle:
-    wheels_distance: 0.605           # To be configured
+    wheels_distance: 0.465
     wheels:
-      radius: 0.165                  # To be configured
-      width: 0.140                   # To be configured
-      hub_carrier_offset: 0.0        # To be configured
+      radius: 0.165
+      width: 0.140
+      hub_carrier_offset: 0.07
 
   rear_axle:
-    wheels_distance: 0.605           # To be configured
+    wheels_distance: 0.605
     wheels:
-      radius: 0.165                  # To be configured
-      width: 0.140                   # To be configured
-      hub_carrier_offset: 0.0        # To be configured
+      radius: 0.165
+      width: 0.140
+      hub_carrier_offset: 0.0
 
   aabb:
-      length: 0.980                  # To be configured
-      width: 0.38                    # To be configured
-      height: 0.25                   # To be configured
-      center: [0., 0., 0.24]        # To be configured
-  ground_clearance: 0.105            # To be configured
+    length: 0.980
+    width: 0.38
+    height: 0.25
+    center: [0., 0., 0.24]
+  ground_clearance: 0.105
 
 front_axle_steering_control:
   command:
-    maximal_angle: 0.5760            # To be configured
-    maximal_angular_speed: 0.2433    # To be configured
+    maximal_angle: 0.5760 # To be configured
+    maximal_angular_speed: 0.2433 # To be configured
   sensor:
-    angle_std: 0.008722              # To be configured
-    angle_range: 0.5760              # To be configured
+    angle_std: 0.008722 # To be configured
+    angle_range: 0.5760 # To be configured
 
 rear_wheels_speed_control:
   command:
-    maximal_speed: 1.667             # To be configured
-    maximal_acceleration: 1.0        # To be configured
+    maximal_speed: 1.667 # To be configured
+    maximal_acceleration: 1.0 # To be configured
   sensor:
-    speed_std: 0.1                   # To be configured
-    speed_range: 1.667               # To be configured
+    speed_std: 0.1 # To be configured
+    speed_range: 1.667 # To be configured
 
 inertia:
   mass: 70.
@@ -68,4 +68,3 @@ links:
   front_right_wheel_spinning_link_name: front_right_wheel_spinning_link
   rear_left_wheel_spinning_link_name: rear_left_wheel_spinning_link
   rear_right_wheel_spinning_link_name: rear_right_wheel_spinning_link
-

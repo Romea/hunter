@@ -14,6 +14,10 @@ ament_python_install_module(python/hunter_description.py)
 ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/${PROJECT_NAME}.dsv.in")
 
 
+file(DOWNLOAD
+    https://raw.githubusercontent.com/agilexrobotics/ugv_gazebo_sim/master/hunter/hunter2_base/meshes/base_link.STL    
+    ${CMAKE_SOURCE_DIR}/meshes/chassis.STL)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   list(APPEND AMENT_LINT_AUTO_EXCLUDE ament_cmake_copyright)
