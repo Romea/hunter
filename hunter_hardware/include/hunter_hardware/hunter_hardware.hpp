@@ -23,6 +23,9 @@
 #include "romea_common_utils/ros_versions.hpp"
 #include "romea_mobile_base_hardware/hardware_system_interface.hpp"
 
+// agilex
+#include "ugv_sdk/mobile_robot/hunter_robot.hpp"
+
 namespace romea
 {
 namespace ros2
@@ -68,10 +71,12 @@ private:
   void set_hardware_state_();
 
 private:
-  float front_wheel_radius_;
+  westonrobot::HunterRobot robot_;
+
+  // float front_wheel_radius_;
   float rear_wheel_radius_;
-  double wheelbase_;
-  double front_track_;
+  // double wheelbase_;
+  // double front_track_;
 
   std::atomic<float> front_steering_angle_measure_;
   std::atomic<float> rear_left_wheel_angular_speed_measure_;

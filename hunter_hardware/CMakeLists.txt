@@ -26,6 +26,8 @@ find_package(romea_mobile_base_utils REQUIRED)
 find_package(romea_mobile_base_hardware REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(ackermann_msgs REQUIRED)
+find_package(ugv_sdk REQUIRED)
+
 
 ## COMPILE
 add_library(
@@ -50,13 +52,14 @@ ament_target_dependencies(
   pluginlib
   rclcpp
   rclcpp_lifecycle
-  romea_core_common
+  romea_core_common 
   romea_core_mobile_base
   romea_common_utils
   romea_mobile_base_utils
   romea_mobile_base_hardware
   sensor_msgs
   ackermann_msgs
+  ugv_sdk
 )
 
 # Causes the visibility macros to use dllexport rather than dllimport,
@@ -102,6 +105,7 @@ ament_export_dependencies(
   romea_mobile_base_hardware
   sensor_msgs
   ackermann_msgs
+  ugv_sdk
 )
 
 if(BUILD_TESTING)

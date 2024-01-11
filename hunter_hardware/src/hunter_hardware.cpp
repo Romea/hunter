@@ -23,11 +23,20 @@
 #include "rclcpp/rclcpp.hpp"
 
 // romea
+#include "romea_core_common/math/Algorithm.hpp"
 #include "romea_mobile_base_hardware/hardware_info.hpp"
+#include "romea_core_mobile_base/kinematic/axle_steering/FowardOneAxleSteeringKinematic.hpp"
+#include "romea_core_mobile_base/kinematic/axle_steering/InverseOneAxleSteeringKinematic.hpp"
 
 // local
 #include "hunter_hardware/hunter_hardware.hpp"
 
+namespace
+{
+size_t FRONT_STEERING_MOTOR_ID_ = 0;
+size_t REAR_LEFT_SPINNING_MOTOR_ID_ = 1;
+size_t REAR_RIGHT_SPINNING_MOTOR_ID_ = 2;
+}
 
 namespace romea
 {
@@ -37,10 +46,11 @@ namespace ros2
 //-----------------------------------------------------------------------------
 HunterHardware::HunterHardware()
 : HardwareSystemInterface<HardwareInterface1FAS2RWD>("HunterHardware"),
-  front_wheel_radius_(0),
+  robot_(ProtocolVersion::AGX_V2),
+  // front_wheel_radius_(0),
   rear_wheel_radius_(0),
-  wheelbase_(0),
-  front_track_(0),
+  // wheelbase_(0),
+  // front_track_(0),
   front_steering_angle_measure_(0),
   rear_left_wheel_angular_speed_measure_(0),
   rear_right_wheel_angular_speed_measure_(0),
@@ -66,8 +76,13 @@ hardware_interface::return_type HunterHardware::connect_()
   // RCLCPP_ERROR(rclcpp::get_logger("HunterHardware"), "Init communication with robot");
   // To be implememented
 
-  send_null_command_();
-  return hardware_interface::return_type::OK;
+  if (robot_.Connect("can0")) {
+    robot_.EnableCommandedMode();
+    send_null_command_();
+    return hardware_interface::return_type::OK;
+  } else {
+    return hardware_interface::return_type::ERROR;
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -86,9 +101,9 @@ hardware_interface::return_type HunterHardware::load_info_(
 {
   try {
     // Get some info from ros2_control item of robot urdf file
-    wheelbase_ = get_parameter<double>(hardware_info, "wheelbase");
-    front_track_ = get_parameter<double>(hardware_info, "front_track");
-    front_wheel_radius_ = get_parameter<float>(hardware_info, "front_wheel_radius");
+    // wheelbase_ = get_parameter<double>(hardware_info, "wheelbase");
+    // front_track_ = get_parameter<double>(hardware_info, "front_track");
+    // front_wheel_radius_ = get_parameter<float>(hardware_info, "front_wheel_radius");
     rear_wheel_radius_ = get_parameter<float>(hardware_info, "rear_wheel_radius");
     return hardware_interface::return_type::OK;
   } catch (std::runtime_error & e) {
@@ -98,17 +113,9 @@ hardware_interface::return_type HunterHardware::load_info_(
 }
 
 //-----------------------------------------------------------------------------
-void HunterHardware::send_command_()
-{
-  // To be implememented
-  // Send command to robot
-}
-
-//-----------------------------------------------------------------------------
 void HunterHardware::send_null_command_()
 {
-  // To be implememented
-  // Send null command to robot
+  robot_.SetMotionCommand(0, 0);
 }
 
 
@@ -121,14 +128,16 @@ hardware_interface::return_type HunterHardware::read(
   const rclcpp::Duration & /*period*/)
 #endif
 {
-  // RCLCPP_ERROR(rclcpp::get_logger("HunterHardware"), "Read data from robot ");
-  // To be implememented
-  // front_steering_angle_measure_ = ???
-  // front_left_wheel_angular_speed_measure_ = ???
-  // front_right_wheel_angular_speed_measure_ = ???
-
-
   try {
+    //TODO (JEAN) to be finished
+    auto actuator = robot_.GetActuatorState();
+    // rear_left_wheel_angular_speed_measure_ =
+    //   actuator.actuator_hs_state[FRONT_STEERING_MOTOR_ID_].pulse_count * ? ;
+    // rear_left_wheel_angular_speed_measure_ =
+    //   actuator.actuator_hs_state[REAR_LEFT_SPINNING_MOTOR_ID_].rpm * ? / rear_wheel_radius_;
+    // rear_right_wheel_angular_speed_measure_ =
+    //   actuator.actuator_hs_state[REAR_LEFT_SPINNING_MOTOR_ID_].rpm * ? / rear_wheel_radius_;
+
     set_hardware_state_();
     return hardware_interface::return_type::OK;
   } catch (std::runtime_error & e) {
@@ -149,8 +158,11 @@ hardware_interface::return_type HunterHardware::write(
 {
   // RCLCPP_ERROR(rclcpp::get_logger("HunterHardware"), "Send command to robot");
   get_hardware_command_();
-  send_command_();
 
+  auto linear_velocity_command = 0.5 * rear_wheel_radius_ * (
+    rear_left_wheel_angular_speed_command_ + rear_right_wheel_angular_speed_command_);
+
+  robot_.SetMotionCommand(linear_velocity_command, front_steering_angle_command_);
   return hardware_interface::return_type::OK;
 }
 
