@@ -15,7 +15,7 @@ ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/${PROJECT_NAME}.d
 
 
 file(DOWNLOAD
-    https://raw.githubusercontent.com/agilexrobotics/ugv_gazebo_sim/master/hunter/hunter2_base/meshes/base_link.STL    
+    https://raw.githubusercontent.com/Romea-Third-Party/ugv_gazebo_sim/master/hunter/hunter2_base/meshes/base_link.STL    
     ${CMAKE_SOURCE_DIR}/meshes/chassis.STL)
 
 if(BUILD_TESTING)
