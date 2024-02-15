@@ -4,6 +4,9 @@
    <xacro:macro name="hunter" params="mode prefix">
 
       <xacro:include filename="$(find romea_mobile_base_description)/urdf/base1FASxxx.chassis.xacro" />
+      <xacro:include filename="$(find hunter_description)/urdf/visual/chassis.xacro" />
+      <xacro:include filename="$(find hunter_description)/urdf/visual/wheels.xacro" />
+      <xacro:include filename="$(find hunter_description)/urdf/visual/arms.xacro" />
 
       <xacro:property name="conf" value="$(find hunter_description)/config/hunter.yaml" />
       <xacro:property name="props" value="${load_yaml(conf)}" />
@@ -94,6 +97,7 @@
 
 
       <!-- Wheel Properties -->
+      <xacro:property name="front_wheel_x_offset" value="0" />
       <xacro:property name="front_hub_carrier_offset"
          value="${props['geometry']['front_axle']['wheels']['hub_carrier_offset']}" />
       <xacro:property name="rear_hub_carrier_offset"
@@ -134,33 +138,14 @@
       <xacro:property name="front_wheel_steering_link_y" value="${front_hub_carrier_offset}" />
       <xacro:property name="front_wheel_steering_link_xz" value="0.1" />
 
-
-      <!-- <origin xyz="${-body_reference_x} 0 ${chassis_height}" rpy="0 0 ${M_PI/2.0}" />
-        <geometry>
-          <mesh filename="package://adap2e_description/meshes/framev3_05.dae" />
-        </geometry>
-        <material name="grey">
-          <color rgba="0.6 0.6 0.6 1" />
-        </material> -->
-
       <xacro:chassis>
-         <!-- visual chassis -->
-         <visual>
-            <origin
-               xyz="${aabb_center_x-body_reference_x-0.05} ${aabb_center_y}  ${aabb_center_z-chassis_height+0.1255}"
-               rpy="0 0 0" />
-            <geometry>
-               <mesh filename="package://hunter_description/meshes/chassis.STL" />
-               <!-- <box size="${aabb_length} ${aabb_width} ${aabb_height}" /> -->
-            </geometry>
-         </visual>
-         <!-- visual front steering -->
-         <box
-            size="${front_wheel_steering_link_xz} ${front_wheel_steering_link_y} ${front_wheel_steering_link_xz}" />
-         <!-- visual front wheel -->
-         <cylinder length="${front_wheel_width}" radius="${front_wheel_radius}" />
-         <!-- visual rear wheel -->
-         <cylinder length="${rear_wheel_width}" radius="${rear_wheel_radius}" />
+         <xacro:chassis_visual />
+         <xacro:front_left_arm_visual />
+         <xacro:front_right_arm_visual />
+         <xacro:front_left_wheel_visual />
+         <xacro:front_right_wheel_visual />
+         <xacro:rear_left_wheel_visual />
+         <xacro:rear_right_wheel_visual />
       </xacro:chassis>
 
    </xacro:macro>
