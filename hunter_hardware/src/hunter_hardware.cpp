@@ -24,7 +24,7 @@
 
 // romea
 #include "romea_core_common/math/Algorithm.hpp"
-#include "romea_mobile_base_hardware/hardware_info.hpp"
+#include "romea_mobile_base_utils/ros2_control/info/hardware_info_common.hpp"
 #include "romea_core_mobile_base/kinematic/axle_steering/FowardOneAxleSteeringKinematic.hpp"
 #include "romea_core_mobile_base/kinematic/axle_steering/InverseOneAxleSteeringKinematic.hpp"
 
@@ -104,7 +104,8 @@ hardware_interface::return_type HunterHardware::load_info_(
     // wheelbase_ = get_parameter<double>(hardware_info, "wheelbase");
     // front_track_ = get_parameter<double>(hardware_info, "front_track");
     // front_wheel_radius_ = get_parameter<float>(hardware_info, "front_wheel_radius");
-    rear_wheel_radius_ = get_parameter<float>(hardware_info, "rear_wheel_radius");
+    // rear_wheel_radius_ = get_parameter<float>(hardware_info, "rear_wheel_radius");
+    rear_wheel_radius_ = get_rear_wheel_radius(hardware_info);
     return hardware_interface::return_type::OK;
   } catch (std::runtime_error & e) {
     RCLCPP_FATAL_STREAM(rclcpp::get_logger("HunterHardware"), e.what());
@@ -174,13 +175,13 @@ void HunterHardware::set_hardware_state_()
   state.frontAxleSteeringAngle = front_steering_angle_measure_;
   state.rearLeftWheelSpinningMotion.velocity = rear_left_wheel_angular_speed_measure_;
   state.rearRightWheelSpinningMotion.velocity = rear_right_wheel_angular_speed_measure_;
-  this->hardware_interface_->set_state(state);
+  this->hardware_interface_->set_feedback(state);
 }
 
 //-----------------------------------------------------------------------------
 void HunterHardware::get_hardware_command_()
 {
-  core::HardwareCommand1FAS2RWD command = hardware_interface_->get_command();
+  core::HardwareCommand1FAS2RWD command = hardware_interface_->get_hardware_command();
 
   front_steering_angle_command_ = command.frontAxleSteeringAngle;
   rear_left_wheel_angular_speed_command_ = command.rearLeftWheelSpinningSetPoint;
