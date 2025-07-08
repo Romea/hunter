@@ -122,12 +122,8 @@ void HunterHardware::send_null_command_()
 }
 
 //-----------------------------------------------------------------------------
-#if ROS_DISTRO == ROS_GALACTIC
-hardware_interface::return_type HunterHardware::read()
-#else
 hardware_interface::return_type HunterHardware::read(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
-#endif
 {
   try {
     auto actuator_state = robot_.GetActuatorState();
@@ -150,12 +146,9 @@ hardware_interface::return_type HunterHardware::read(
 }
 
 //-----------------------------------------------------------------------------
-#if ROS_DISTRO == ROS_GALACTIC
-hardware_interface::return_type HunterHardware::write()
-#else
 hardware_interface::return_type HunterHardware::write(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
-#endif
+  const rclcpp::Time & /*time*/,
+  const rclcpp::Duration & /*period*/)
 {
   // RCLCPP_ERROR(rclcpp::get_logger("HunterHardware"), "Send command to robot");
   get_hardware_command_();
