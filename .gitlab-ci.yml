@@ -5,4 +5,3 @@ include:
 
 variables:
   PKGS_TO_BUILD_TEST: "hunter_bringup hunter_description hunter_hardware"
-  ROS_DISTRO_TO_TEST: "humble"
