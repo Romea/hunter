@@ -16,6 +16,7 @@ set(ROS_DISTRO "ROS_${ROS_DISTRO}")
 # find ros2 dependencies
 find_package(ament_cmake REQUIRED)
 find_package(hardware_interface REQUIRED)
+find_package(pal_statistics REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
@@ -49,10 +50,11 @@ target_compile_definitions(
 ament_target_dependencies(
   ${PROJECT_NAME}
   hardware_interface
+  pal_statistics
   pluginlib
   rclcpp
   rclcpp_lifecycle
-  romea_core_common 
+  romea_core_common
   romea_core_mobile_base
   romea_common_utils
   romea_mobile_base_utils

@@ -126,16 +126,23 @@ hardware_interface::return_type HunterHardware::read(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
   try {
-    auto actuator_state = robot_.GetActuatorState();
-    auto robot_state = robot_.GetRobotState();
+    auto actuator = robot_.GetActuatorState();
 
-    rear_left_wheel_angular_speed_measure_ =
-      -actuator_state.actuator_hs_state[REAR_LEFT_SPINNING_MOTOR_ID_].rpm * RPM_TO_RAD_PER_SEC;
+    // TODO(JEAN) to be finished
+    // rear_left_wheel_angular_speed_measure_ =
+    //   actuator.actuator_hs_state[FRONT_STEERING_MOTOR_ID_].pulse_count * ? ;
+    // rear_left_wheel_angular_speed_measure_ =
+    //   actuator.actuator_hs_state[REAR_LEFT_SPINNING_MOTOR_ID_].rpm * ? / rear_wheel_radius_;
+    // rear_right_wheel_angular_speed_measure_ =
+    //   actuator.actuator_hs_state[REAR_LEFT_SPINNING_MOTOR_ID_].rpm * ? / rear_wheel_radius_;
 
-    rear_right_wheel_angular_speed_measure_ =
-      actuator_state.actuator_hs_state[REAR_RIGHT_SPINNING_MOTOR_ID_].rpm * RPM_TO_RAD_PER_SEC;
-
-    front_steering_angle_measure_ = robot_state.motion_state.steering_angle;
+    // alternative version written by Clément Courcelle
+    // auto robot_state = robot_.GetRobotState();
+    // rear_left_wheel_angular_speed_measure_ =
+    //   -actuator.actuator_hs_state[REAR_LEFT_SPINNING_MOTOR_ID_].rpm * RPM_TO_RAD_PER_SEC;
+    // rear_right_wheel_angular_speed_measure_ =
+    //   actuator.actuator_hs_state[REAR_RIGHT_SPINNING_MOTOR_ID_].rpm * RPM_TO_RAD_PER_SEC;
+    // front_steering_angle_measure_ = robot_state.motion_state.steering_angle;
 
     set_hardware_state_();
     return hardware_interface::return_type::OK;
