@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 // std
 #include <limits>
 #include <string>
@@ -24,9 +23,9 @@
 
 // romea
 #include "romea_core_common/math/Algorithm.hpp"
-#include "romea_mobile_base_utils/ros2_control/info/hardware_info_common.hpp"
 #include "romea_core_mobile_base/kinematic/axle_steering/FowardOneAxleSteeringKinematic.hpp"
 #include "romea_core_mobile_base/kinematic/axle_steering/InverseOneAxleSteeringKinematic.hpp"
+#include "romea_mobile_base_utils/ros2_control/info/hardware_info_common.hpp"
 
 // local
 #include "hunter_hardware/hunter_hardware.hpp"
@@ -36,7 +35,11 @@ namespace
 size_t FRONT_STEERING_MOTOR_ID_ = 0;
 size_t REAR_LEFT_SPINNING_MOTOR_ID_ = 1;
 size_t REAR_RIGHT_SPINNING_MOTOR_ID_ = 2;
-}
+
+double MOTOR_REDUCTION_RATIO = 40.0;
+double RPM_TO_RAD_PER_SEC = 2.0 * M_PI / 60.0 / MOTOR_REDUCTION_RATIO;
+
+}  // namespace
 
 namespace romea
 {
@@ -68,7 +71,6 @@ HunterHardware::~HunterHardware()
     on_deactivate(lifecycle_state_);
   }
 }
-
 
 //-----------------------------------------------------------------------------
 hardware_interface::return_type HunterHardware::connect_()
@@ -119,25 +121,25 @@ void HunterHardware::send_null_command_()
   robot_.SetMotionCommand(0, 0);
 }
 
-
 //-----------------------------------------------------------------------------
 #if ROS_DISTRO == ROS_GALACTIC
 hardware_interface::return_type HunterHardware::read()
 #else
 hardware_interface::return_type HunterHardware::read(
-  const rclcpp::Time & /*time*/,
-  const rclcpp::Duration & /*period*/)
+  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 #endif
 {
   try {
-    //TODO (JEAN) to be finished
-    auto actuator = robot_.GetActuatorState();
-    // rear_left_wheel_angular_speed_measure_ =
-    //   actuator.actuator_hs_state[FRONT_STEERING_MOTOR_ID_].pulse_count * ? ;
-    // rear_left_wheel_angular_speed_measure_ =
-    //   actuator.actuator_hs_state[REAR_LEFT_SPINNING_MOTOR_ID_].rpm * ? / rear_wheel_radius_;
-    // rear_right_wheel_angular_speed_measure_ =
-    //   actuator.actuator_hs_state[REAR_LEFT_SPINNING_MOTOR_ID_].rpm * ? / rear_wheel_radius_;
+    auto actuator_state = robot_.GetActuatorState();
+    auto robot_state = robot_.GetRobotState();
+
+    rear_left_wheel_angular_speed_measure_ =
+      -actuator_state.actuator_hs_state[REAR_LEFT_SPINNING_MOTOR_ID_].rpm * RPM_TO_RAD_PER_SEC;
+
+    rear_right_wheel_angular_speed_measure_ =
+      actuator_state.actuator_hs_state[REAR_RIGHT_SPINNING_MOTOR_ID_].rpm * RPM_TO_RAD_PER_SEC;
+
+    front_steering_angle_measure_ = robot_state.motion_state.steering_angle;
 
     set_hardware_state_();
     return hardware_interface::return_type::OK;
@@ -147,26 +149,24 @@ hardware_interface::return_type HunterHardware::read(
   }
 }
 
-
 //-----------------------------------------------------------------------------
 #if ROS_DISTRO == ROS_GALACTIC
 hardware_interface::return_type HunterHardware::write()
-# else
+#else
 hardware_interface::return_type HunterHardware::write(
-  const rclcpp::Time & /*time*/,
-  const rclcpp::Duration & /*period*/)
+  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 #endif
 {
   // RCLCPP_ERROR(rclcpp::get_logger("HunterHardware"), "Send command to robot");
   get_hardware_command_();
 
-  auto linear_velocity_command = 0.5 * rear_wheel_radius_ * (
-    rear_left_wheel_angular_speed_command_ + rear_right_wheel_angular_speed_command_);
+  auto linear_velocity_command =
+    0.5 * rear_wheel_radius_ *
+    (rear_left_wheel_angular_speed_command_ + rear_right_wheel_angular_speed_command_);
 
   robot_.SetMotionCommand(linear_velocity_command, front_steering_angle_command_);
   return hardware_interface::return_type::OK;
 }
-
 
 //-----------------------------------------------------------------------------
 void HunterHardware::set_hardware_state_()
@@ -190,7 +190,6 @@ void HunterHardware::get_hardware_command_()
 
 }  // namespace ros2
 }  // namespace romea
-
 
 #include "pluginlib/class_list_macros.hpp"
 PLUGINLIB_EXPORT_CLASS(romea::ros2::HunterHardware, hardware_interface::SystemInterface)
