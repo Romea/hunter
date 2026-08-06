@@ -48,7 +48,7 @@ namespace ros2
 
 //-----------------------------------------------------------------------------
 HunterHardware::HunterHardware()
-: HardwareSystemInterface<HardwareInterface1FAS2RWD>("HunterHardware"),
+: HardwareSystemInterface1FAS2RWD("HunterHardware"),
   robot_(ProtocolVersion::AGX_V2),
   // front_wheel_radius_(0),
   rear_wheel_radius_(0),

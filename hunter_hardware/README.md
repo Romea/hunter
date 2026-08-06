@@ -10,7 +10,7 @@ The exported plugin is:
 
 | Plugin | Base class | Mobile base architecture |
 |---|---|---|
-| `hunter_hardware/HunterHardware` | `HardwareSystemInterface<HardwareInterface1FAS2RWD>` | `1FAS2RWD` |
+| `hunter_hardware/HunterHardware` | `HardwareSystemInterface1FAS2RWD` | `1FAS2RWD` |
 
 ## 2) Hardware concept
 

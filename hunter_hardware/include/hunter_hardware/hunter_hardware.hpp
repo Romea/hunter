@@ -31,7 +31,7 @@ namespace romea
 namespace ros2
 {
 
-class HunterHardware : public HardwareSystemInterface<HardwareInterface1FAS2RWD>
+class HunterHardware : public HardwareSystemInterface1FAS2RWD
 {
 public:
   RCLCPP_SHARED_PTR_DEFINITIONS(HunterHardware);
